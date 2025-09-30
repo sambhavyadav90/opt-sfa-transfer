@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using OptSfa.Migration.Application.Interfaces;
 using OptSfa.Migration.Application.Services;
+using OptSfa.Migration.Data.Context;
 using OptSfa.Migration.Data.Repository;
 using OptSfa.Migration.Domain.Interfaces;
 
@@ -9,6 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DbConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DbConnection"))
+    )
+);
 
 builder.Services.AddSingleton<IClientRepository, ClientRepository>();
 
