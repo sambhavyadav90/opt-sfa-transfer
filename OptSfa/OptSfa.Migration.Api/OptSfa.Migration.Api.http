@@ -1,0 +1,6 @@
+@OptSfa.Migration.Api_HostAddress = http://localhost:5166
+
+GET {{OptSfa.Migration.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
