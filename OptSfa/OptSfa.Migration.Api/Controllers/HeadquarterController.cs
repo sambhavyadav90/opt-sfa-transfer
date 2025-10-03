@@ -1,63 +1,50 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using OptSfa.Migration.Application.Interfaces;
+using OptSfa.Migration.Domain;
 using OptSfa.Migration.Domain.ViewModel;
 
 namespace OptSfa.Migration.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableCors("AllowAll")]
     public class HeadquarterController : ControllerBase
     {
-        private readonly IHeadquarterService headquarterService;
-        public HeadquarterController(IHeadquarterService headquarterService)
+        private readonly IHeadQuarterViewService _headquarterService;
+
+        public HeadquarterController(IHeadQuarterViewService headquarterService)
         {
-            this.headquarterService = headquarterService;
+            _headquarterService = headquarterService;
         }
 
-        [HttpPost("/createheadquarter")]
-        public async Task<IActionResult> CreateHeadquarter([FromBody] HeadQuaterMasterViewModel data)
-        {
-            if (data == null)
-                return BadRequest(new { message = "Headquarter data is required." });
-
-            try
-            {
-                var created = await headquarterService.createHeadquarter(data);
-                return CreatedAtAction(nameof(GetById), new { id = created.districtId }, created);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error creating headquarter.", error = ex.Message });
-            }
-        }
-
-        [HttpGet("/getallheadquarters")]
-        public async Task<IActionResult> GetAllHeadquarters()
+        // Relative route (do NOT start with "/")
+        [HttpGet("getallheadquarters")]
+        public async  Task<ActionResult<MyJsonReturn<List<HeadQuarterViewModel>>>> GetAllHeadquarters()
         {
             try
             {
-                var all = await headquarterService.getAllHeadquaters();
-                return Ok(all);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error fetching headquarters.", error = ex.Message });
-            }
-        }
+                var all = await _headquarterService.getAllHeadQuarters();
 
-        [HttpGet("/getheadquarterbyid/{id}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
-        {
-            try
-            {
-                var hq = await headquarterService.getbyId(id);
-                if (hq == null)
-                    return NotFound(new { message = $"Headquarter with id {id} not found." });
-                return Ok(hq);
+                return new MyJsonReturn<List<HeadQuarterViewModel>>
+                {
+                    isSuccess = true,
+                    status = System.Net.HttpStatusCode.OK,
+                    message = "Headquarters fetched successfully",
+                    stackTrace = null,
+                    data = all
+                };
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error fetching headquarter.", error = ex.Message });
+                return new MyJsonReturn<List<HeadQuarterViewModel>>
+                {
+                    isSuccess = false,
+                    status = System.Net.HttpStatusCode.InternalServerError,
+                    message = "Error fetching headquarters.",
+                    stackTrace = new List<string> { ex.Message },
+                    data = null
+                };
             }
         }
     }

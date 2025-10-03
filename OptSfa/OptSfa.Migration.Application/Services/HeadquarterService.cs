@@ -8,26 +8,16 @@ using OptSfa.Migration.Domain.ViewModel;
 
 namespace OptSfa.Migration.Application.Services
 {
-    public class HeadquarterService : IHeadquarterService
+    public class HeadquarterService : IHeadQuarterViewService
     {
-        private readonly IHeadquarterRepository headquarterRepository;
-        public HeadquarterService(IHeadquarterRepository headquarterRepository)
+        private readonly IHeadQuarterViewRepository headQuarterViewRepository;
+        public HeadquarterService(IHeadQuarterViewRepository headQuarterViewRepository)
         {
-            this.headquarterRepository = headquarterRepository;
+            this.headQuarterViewRepository = headQuarterViewRepository;
         }
-        public Task<HeadQuaterMasterViewModel> createHeadquarter(HeadQuaterMasterViewModel headquarter)
+        public async Task<List<HeadQuarterViewModel>> getAllHeadQuarters()
         {
-            return headquarterRepository.createHeadquarter(headquarter);
-        }
-
-        public Task<List<HeadQuaterMasterViewModel>> getAllHeadquaters()
-        {
-            return headquarterRepository.getAllHeadquaters();
-        }
-
-        public Task<HeadQuaterMasterViewModel> getbyId(int id)
-        {
-            return headquarterRepository.getbyId(id);
+            return await headQuarterViewRepository.getAllHeadQuarters();
         }
     }
 }

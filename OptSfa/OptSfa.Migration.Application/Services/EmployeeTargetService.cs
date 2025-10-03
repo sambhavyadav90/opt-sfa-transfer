@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using OptSfa.Migration.Application.Interfaces;
 using OptSfa.Migration.Domain.Interfaces;
@@ -15,9 +16,15 @@ namespace OptSfa.Migration.Application.Services
         {
             this.employeeTargetRepository = employeeTargetRepository;
         }
-        public async Task<List<EmployeeTargetViewModel>> getAllEmployeeTarget(string empId, string itemType, string itemStatus)
+
+        public async Task<bool> createEmployee(EmployeeTargetCreateListRequest data)
         {
-            return await employeeTargetRepository.getAllEmployeeTarget(empId, itemType, itemStatus);
+            return await employeeTargetRepository.createEmployee(data);
+        }
+
+        public async Task<List<EmployeeTargetViewModel>> getAllEmployeeTarget(string empId)
+        {
+            return await employeeTargetRepository.getAllEmployeeTarget(empId);
         }
     }
 }

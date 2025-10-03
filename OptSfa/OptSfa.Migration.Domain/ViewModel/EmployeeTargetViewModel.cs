@@ -9,7 +9,7 @@ namespace OptSfa.Migration.Domain.ViewModel
         public float pts { get; set; }
         public float ptr { get; set; }
         public float mrp { get; set; }
-        public string nrv { get; set; }
+        public float nrv { get; set; } = 0.0f;
         public float purchase_rate { get; set; }
     }
 }

@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<ClientMaster> DbClientMaster => Set<ClientMaster>();
     public DbSet<EmployeeMaster> employeeMasters => Set<EmployeeMaster>();
     public DbSet<HeadquarterMaster> headquarterMasters => Set<HeadquarterMaster>();
+    public DbSet<TargetPercentFormula> targetPercentFormulaMasters => Set<TargetPercentFormula>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -32,7 +33,13 @@ public class AppDbContext : DbContext
             eb.HasKey(e => e.districtId);
             eb.Property(e => e.district).HasMaxLength(200).IsRequired();
         });
+        modelBuilder.Entity<TargetPercentFormula>(eb =>
+      {
+          eb.ToTable("target_percent_formula");
+          eb.HasKey(e => e.row_id);
+      });
         modelBuilder.Entity<EmployeeTargetViewModel>().HasNoKey();
+        modelBuilder.Entity<HeadQuarterViewModel>().HasNoKey();
         base.OnModelCreating(modelBuilder);
     }
 }

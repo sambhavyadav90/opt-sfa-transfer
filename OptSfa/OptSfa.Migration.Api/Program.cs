@@ -11,6 +11,16 @@ using OptSfa.Migration.Domain.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//host on local wifi
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5000);  // HTTP
+    options.ListenAnyIP(5001, listenOptions =>
+    {
+        listenOptions.UseHttps(); // HTTPS
+    });
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
@@ -34,10 +44,21 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 builder.Services.AddScoped<IHeadquarterRepository, HeadquarterRepository>();
 
-builder.Services.AddScoped<IHeadquarterService, HeadquarterService>();
+builder.Services.AddScoped<IHeadQuarterViewRepository, HeadQuarterViewRepository>();
+
+builder.Services.AddScoped<IHeadQuarterViewService, HeadquarterService>();
 
 builder.Services.AddScoped<IEmployeeTargetRepository, EmployeeTargetRespository>();
+
 builder.Services.AddScoped<IEmployeeTargetService, EmployeeTargetService>();
+
+builder.Services.AddScoped<ITargetPercentFormulaRepository, TargetPercentFormulaRepository>();
+
+builder.Services.AddScoped<ITargetPecentageFormulaService, TargetFormulaService>();
+
+
+
+
 builder.Services.AddApiVersioning();
 builder.Services.AddApiVersioning(config =>
 {
@@ -68,12 +89,24 @@ builder.Services.AddOpenApi(options =>
 //builder.Services.AddSignalR();
 
 //By Sambhav :: Cross Domain Authentication To Access API
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("AllowSpecificOrigin",
+//         builder =>
+//         {
+//             // builder.WithOrigins("*") // Replace with the allowed domain(s)
+//             builder.AllowAnyOrigin()
+//                    .AllowAnyHeader()
+//                    .AllowAnyMethod();
+//         });
+// });
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
+    options.AddPolicy("AllowAll",
         builder =>
         {
-            builder.WithOrigins("*") // Replace with the allowed domain(s)
+            builder.AllowAnyOrigin() // instead of WithOrigins("*")
                    .AllowAnyHeader()
                    .AllowAnyMethod();
         });
@@ -110,6 +143,7 @@ else
     });
 }
 
+app.UseCors("AllowAll");
 app.UseAuthorization();
 
 app.MapControllers();

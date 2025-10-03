@@ -5,6 +5,7 @@ namespace OptSfa.Migration.Application.Interfaces
 {
     public interface IEmployeeTargetService
     {
-        public Task<List<EmployeeTargetViewModel>> getAllEmployeeTarget(string empId, string itemType, string itemStatus);
+        public Task<List<EmployeeTargetViewModel>> getAllEmployeeTarget(string empId);
+            public Task<bool> createEmployee(EmployeeTargetCreateListRequest data);
     }
 }

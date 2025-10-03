@@ -8,6 +8,7 @@ namespace OptSfa.Migration.Domain.Interfaces
 {
     public interface IEmployeeTargetRepository
     {
-        public Task<List<EmployeeTargetViewModel>> getAllEmployeeTarget(string empId, string itemType, string itemStatus);
+        public Task<List<EmployeeTargetViewModel>> getAllEmployeeTarget(string empId);
+        public Task<bool> createEmployee(EmployeeTargetCreateListRequest data);
     }
 }
