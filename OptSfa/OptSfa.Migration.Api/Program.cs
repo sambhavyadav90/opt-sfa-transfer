@@ -31,6 +31,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 builder.Services.AddControllers();
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
@@ -56,8 +57,15 @@ builder.Services.AddScoped<ITargetPercentFormulaRepository, TargetPercentFormula
 
 builder.Services.AddScoped<ITargetPecentageFormulaService, TargetFormulaService>();
 
+builder.Services.AddScoped<IStateMasterRepository, StateMasterRepository>();
 
+builder.Services.AddScoped<IStateMasterService, StateMasterService>();
 
+builder.Services.AddScoped<IMappedDbcolumnRepository, MappedDbColumnRepository>();
+builder.Services.AddScoped<IMappedDbColumnService, MappedDbCoulmnService>();
+builder.Services.AddScoped<ISaveDataMasterRepository, SaveDataMasterRepository>();
+
+builder.Services.AddScoped<ISaveMasterService, SaveMasterService>();
 
 builder.Services.AddApiVersioning();
 builder.Services.AddApiVersioning(config =>

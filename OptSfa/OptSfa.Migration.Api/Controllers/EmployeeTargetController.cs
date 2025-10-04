@@ -18,7 +18,7 @@ namespace OptSfa.Migration.Api.Controllers
             _employeeTargetService = employeeTargetService;
         }
 
-        [HttpGet("getemployeetarget/{empId}")]
+        [HttpGet("GetEmployeeTarget/{empId}")]
         public async Task<ActionResult<MyJsonReturn<List<EmployeeTargetViewModel>>>> GetEmployeeTarget(string empId)
         {
             try
@@ -48,7 +48,7 @@ namespace OptSfa.Migration.Api.Controllers
         }
 
         [HttpPost("CreateEmployeeTarget")]
-        public async Task<ActionResult<MyJsonReturn<EmployeeTargetCreateListRequest>>> createEmployeeTarget([FromBody] EmployeeTargetCreateListRequest inputdata)
+        public async Task<ActionResult<MyJsonReturn<EmployeeTargetCreateListRequest>>> CreateEmployeeTarget([FromBody] EmployeeTargetCreateListRequest inputdata)
         {
             try
             {

@@ -18,8 +18,7 @@ namespace OptSfa.Migration.Api.Controllers
             _headquarterService = headquarterService;
         }
 
-        // Relative route (do NOT start with "/")
-        [HttpGet("getallheadquarters")]
+        [HttpGet("GetAll")]
         public async  Task<ActionResult<MyJsonReturn<List<HeadQuarterViewModel>>>> GetAllHeadquarters()
         {
             try

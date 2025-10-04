@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using OptSfa.Migration.Application.Interfaces;
@@ -23,7 +19,7 @@ namespace OptSfa.Migration.Api.Controllers
             this.targetPecentageFormulaService = targetPecentageFormulaService;
         }
 
-        [HttpGet("getalltargets")]
+        [HttpGet("GetAllTargets")]
         public async Task<ActionResult<MyJsonReturn<List<TargetPercentFormula>>>> GetAll()
         {
             try
@@ -50,7 +46,7 @@ namespace OptSfa.Migration.Api.Controllers
                 });
             }
         }
-        [HttpPost("Createtarget")]
+        [HttpPost("CreateTarget")]
         public async Task<ActionResult<MyJsonReturn<TargetPercentFomulaRequest>>> CreateNewTarget([FromBody] TargetPercentFomulaRequest data)
         {
             try
