@@ -1,10 +1,10 @@
 ﻿using OptSfa.Migration.Domain.Models;
+using OptSfa.Migration.Domain.ViewModel;
 
 namespace OptSfa.Migration.Application.Interfaces;
 
 public interface IClientService
 {
-    Task<ClientMaster?> GetByIdAsync(Guid id, CancellationToken ct = default);
-    Task AddAsync(ClientMaster customer, CancellationToken ct = default);
-    Task SaveChangesAsync(CancellationToken ct = default);
+    public Task<List<ClientMasterViewModel>> getAll(string empId, string clientType, string areaMain, string status,int page, int pageSize);
+
 }
