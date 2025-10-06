@@ -1,6 +1,7 @@
 ﻿using OptSfa.Migration.Application.Interfaces;
 using OptSfa.Migration.Domain.Interfaces;
 using OptSfa.Migration.Domain.Models;
+using OptSfa.Migration.Domain.ViewModel;
 
 namespace OptSfa.Migration.Application.Services;
 
@@ -12,19 +13,8 @@ public class ClientService : IClientService
         _clientRepository = clientRepository;
     }
 
-    public async Task AddAsync(ClientMaster customer, CancellationToken ct = default)
+    public async Task<List<ClientMasterViewModel>> getAll(string empId, string clientType, string areaMain, string status,int page,int page_size)
     {
-        var result = await _clientRepository.GetByIdAsync(customer.client_id, ct);
-    }
-
-    public async Task<ClientMaster?> GetByIdAsync(Guid id, CancellationToken ct = default)
-    {
-        var result = await _clientRepository.GetByIdAsync(id.GetHashCode(), ct);
-        return result;
-    }
-
-    public async Task SaveChangesAsync(CancellationToken ct = default)
-    {
-        await _clientRepository.SaveChangesAsync(ct);
+        return await _clientRepository.getAll(empId, clientType, areaMain, status,page,page_size);
     }
 }
