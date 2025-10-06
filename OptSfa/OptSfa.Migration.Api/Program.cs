@@ -34,6 +34,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
 
@@ -56,6 +57,16 @@ builder.Services.AddScoped<IEmployeeTargetService, EmployeeTargetService>();
 builder.Services.AddScoped<ITargetPercentFormulaRepository, TargetPercentFormulaRepository>();
 
 builder.Services.AddScoped<ITargetPecentageFormulaService, TargetFormulaService>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DbConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DbConnection"))
+    )
+);
+
+builder.Services.AddSingleton<IClientRepository, ClientRepository>();
+
 
 builder.Services.AddScoped<IStateMasterRepository, StateMasterRepository>();
 

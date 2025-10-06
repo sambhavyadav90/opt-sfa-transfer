@@ -2,7 +2,6 @@
 using OptSfa.Migration.Domain.Models;
 using OptSfa.Migration.Domain.ViewModel;
 
-
 namespace OptSfa.Migration.Data.Context;
 
 public class AppDbContext : DbContext
