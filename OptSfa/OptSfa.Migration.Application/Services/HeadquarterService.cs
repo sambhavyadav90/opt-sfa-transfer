@@ -15,9 +15,10 @@ namespace OptSfa.Migration.Application.Services
         {
             this.headQuarterViewRepository = headQuarterViewRepository;
         }
-        public async Task<List<HeadQuarterViewModel>> getAllHeadQuarters()
+
+        public async Task<List<HeadQuaterMasterViewModel>> getAllHeadquaters(int id)
         {
-            return await headQuarterViewRepository.getAllHeadQuarters();
+            return await headQuarterViewRepository.getAllHeadQuarters(id);
         }
     }
 }

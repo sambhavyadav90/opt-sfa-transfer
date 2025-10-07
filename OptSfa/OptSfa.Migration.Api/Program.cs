@@ -1,3 +1,6 @@
+using System.Net.WebSockets;
+using System.Text;
+using System.Text.Json;
 using Asp.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -6,13 +9,11 @@ using OptSfa.Migration.Application.Services;
 using OptSfa.Migration.Data.Context;
 using OptSfa.Migration.Data.Repository;
 using OptSfa.Migration.Domain.Interfaces;
-
-
+using OptSfa.Migration.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //host on local wifi
-
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(5000);  // HTTP
@@ -29,14 +30,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
-
 builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
 
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
-
 
 builder.Services.AddScoped<IClientService, ClientService>();
 
@@ -77,7 +76,12 @@ builder.Services.AddScoped<IMappedDbColumnService, MappedDbCoulmnService>();
 builder.Services.AddScoped<ISaveDataMasterRepository, SaveDataMasterRepository>();
 
 builder.Services.AddScoped<ISaveMasterService, SaveMasterService>();
+builder.Services.AddSingleton<IFirebaseService, FirebaseService>();
 
+
+builder.Services.AddScoped<IEmployeeDetailsRepository, EmployeeDetailsRepository>();
+builder.Services.AddScoped<IEmployeeDetailsService, EmployeeDetailsService>();
+builder.Services.AddSingleton<IWebSocketManager, OptSfa.Migration.Application.Services.WebSocketManager>();
 builder.Services.AddApiVersioning();
 builder.Services.AddApiVersioning(config =>
 {
@@ -163,10 +167,65 @@ else
 }
 
 app.UseCors("AllowAll");
+app.UseWebSockets();
 app.UseAuthorization();
 
 app.MapControllers();
+app.Map("/ws", async (HttpContext context, IWebSocketManager webSocketManager) =>
+{
+    if (context.WebSockets.IsWebSocketRequest)
+    {
+        using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+        await HandleWebSocketAsync(webSocket, webSocketManager);
+    }
+    else
+    {
+        context.Response.StatusCode = 400;
+    }
+});
+
+async Task HandleWebSocketAsync(WebSocket webSocket, IWebSocketManager webSocketManager)
+{
+    webSocketManager.Add(webSocket);
+
+    var buffer = new byte[1024 * 4];
+    try
+    {
+        while (webSocket.State == WebSocketState.Open)
+        {
+            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            if (result.MessageType == WebSocketMessageType.Text)
+            {
+                var json = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                if (JsonSerializer.Deserialize<MessageModel>(json) is MessageModel message)
+                {
+                    // Upload to Firebase in real-time
+                    var firebaseService = app.Services.GetRequiredService<IFirebaseService>();
+                    await firebaseService.WriteMessageAsync("messages", message);
+                }
+            }
+            else if (result.MessageType == WebSocketMessageType.Close)
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by client", CancellationToken.None);
+                break;
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log error
+        Console.WriteLine($"WebSocket error: {ex.Message}");
+    }
+    finally
+    {
+        webSocketManager.Remove(webSocket);
+        webSocket.Dispose();
+    }
+}
+
+// Start the Firebase listener once
+var startupFirebaseService = app.Services.GetRequiredService<IFirebaseService>();
+var startupWebSocketManager = app.Services.GetRequiredService<IWebSocketManager>();
+await startupFirebaseService.ListenToMessagesAsync("messages", msg => startupWebSocketManager.Broadcast(msg));
 
 app.Run();
-
-

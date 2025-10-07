@@ -9,8 +9,8 @@ namespace OptSfa.Migration.Domain.Interfaces
 {
     public interface IHeadquarterRepository
     {
-        public Task<List<HeadQuaterMasterViewModel>> getAllHeadquaters();
-        public Task<HeadQuaterMasterViewModel> getbyId(int id);
-        public Task<HeadQuaterMasterViewModel> createHeadquarter(HeadQuaterMasterViewModel headquarter);
+        public Task<List<HeadQuaterMasterViewModel>> getAllHeadquaters(int id);
+        // public Task<HeadQuaterMasterViewModel> getbyId(int id);
+        // public Task<HeadQuaterMasterViewModel> createHeadquarter(HeadQuaterMasterViewModel headquarter);
     }
 }

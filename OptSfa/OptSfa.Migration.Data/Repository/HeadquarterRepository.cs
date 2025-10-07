@@ -7,6 +7,7 @@ using OptSfa.Migration.Data.Context;
 using OptSfa.Migration.Domain.Interfaces;
 using OptSfa.Migration.Domain.Models;
 using OptSfa.Migration.Domain.ViewModel;
+using MySqlConnector;
 
 namespace OptSfa.Migration.Data.Repository
 {
@@ -18,60 +19,29 @@ namespace OptSfa.Migration.Data.Repository
             this.db = db;
         }
 
-        public async Task<HeadQuaterMasterViewModel> createHeadquarter(HeadQuaterMasterViewModel headquarter)
+        public async Task<List<HeadQuaterMasterViewModel>> getAllHeadquaters(int id)
         {
-            if (headquarter == null)
-                throw new ArgumentNullException(nameof(headquarter));
+            string sqlQuery = @"
+                SELECT dm.district_id, dm.district, dm.district_code, sm.state_main, sm.state 
+                FROM district_parent_main dm 
+                JOIN state_master sm ON (dm.state_main = sm.state_main) 
+                WHERE dm.status = 'Active' AND sm.status = 0";
 
-            HeadquarterMaster newHeadquarter = new HeadquarterMaster
+            var parameters = new List<MySqlParameter>();
+
+            if (id > 0)
             {
-                districtId = headquarter.districtId,
-                district = headquarter.district,
-                hqGroupId = headquarter.hqGroupId,
-                status = headquarter.status,
-                districtCode = headquarter.districtCode,
-                stateMain = headquarter.stateMain
-            };
+                sqlQuery += " AND dm.state_main = @stateMain";
+                parameters.Add(new MySqlParameter("@stateMain", id));
+            }
 
-            db.headquarterMasters.Add(newHeadquarter);
-            await db.SaveChangesAsync();
+            sqlQuery += " ORDER BY sm.state, dm.district";
 
-            headquarter.districtId = newHeadquarter.districtId; 
-            return headquarter;
-        }
+            var items = await db.Database
+                .SqlQueryRaw<HeadQuaterMasterViewModel>(sqlQuery, parameters.ToArray())
+                .ToListAsync();
 
-        public async Task<List<HeadQuaterMasterViewModel>> getAllHeadquaters()
-        {
-            List<HeadquarterMaster> allheadquarters = await db.headquarterMasters.ToListAsync();
-
-            List<HeadQuaterMasterViewModel> allHeadquartersVM = allheadquarters.Select(h => new HeadQuaterMasterViewModel
-            {
-                districtId = h.districtId,
-                district = h.district,
-                hqGroupId = h.hqGroupId,
-                status = h.status,
-                districtCode = h.districtCode,
-                stateMain = h.stateMain
-            }).ToList();
-
-            return allHeadquartersVM;
-        }
-
-        public async Task<HeadQuaterMasterViewModel> getbyId(int id)
-        {
-            HeadquarterMaster? hq = await db.headquarterMasters.FirstOrDefaultAsync(h => h.districtId == id);
-
-            if (hq == null) return null;
-
-            return new HeadQuaterMasterViewModel
-            {
-                districtId = hq.districtId,
-                district = hq.district,
-                hqGroupId = hq.hqGroupId,
-                status = hq.status,
-                districtCode = hq.districtCode,
-                stateMain = hq.stateMain
-            };
+            return items ?? new List<HeadQuaterMasterViewModel>();
         }
     }
 }
