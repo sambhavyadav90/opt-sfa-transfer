@@ -10,4 +10,9 @@
     <ProjectReference Include="..\OptSfa.Migration.Domain\OptSfa.Migration.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FireSharp" Version="2.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
 </Project>

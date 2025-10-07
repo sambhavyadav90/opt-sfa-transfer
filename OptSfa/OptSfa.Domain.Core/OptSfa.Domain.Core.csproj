@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OptSfa.Attendance.Domain\OptSfa.Attendance.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

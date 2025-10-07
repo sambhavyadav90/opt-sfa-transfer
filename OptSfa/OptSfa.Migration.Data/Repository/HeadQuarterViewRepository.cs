@@ -16,16 +16,35 @@ namespace OptSfa.Migration.Data.Repository
         {
             this.db = db;
         }
-        public async Task<List<HeadQuarterViewModel>> getAllHeadQuarters()
+        async Task<List<HeadQuaterMasterViewModel>> IHeadQuarterViewRepository.getAllHeadQuarters(int id)
         {
-            string sqlQuery = $@"SELECT state, district_id AS districtId, district 
-            FROM state_master  sm JOIN district_parent_main  
-            dp ON(sm.state_main = dp.state_main) 
-            WHERE sm.status = 0 AND dp.status = 'Active' ORDER BY state,district";
+            List<HeadQuaterMasterViewModel> items;
 
-            var items = await db.Database
-                .SqlQueryRaw<HeadQuarterViewModel>(sqlQuery)
-                .ToListAsync();
+            if (id > 0)
+            {
+                string sqlQuery = @"
+                    SELECT dm.district_id, dm.district, dm.district_code, sm.state_main, sm.state 
+                    FROM district_parent_main dm 
+                    JOIN state_master sm ON (dm.state_main = sm.state_main) 
+                    WHERE dm.status = 'Active' AND sm.status = 0 AND dm.state_main = {0}
+                    ORDER BY sm.state, dm.district";
+
+                items = await db.Database
+                    .SqlQueryRaw<HeadQuaterMasterViewModel>(sqlQuery, id.ToString())
+                    .ToListAsync();
+            }
+            else
+            {
+                string sqlQuery = @"
+                    SELECT dm.district_id, dm.district, dm.district_code, sm.state_main, sm.state 
+                    FROM district_parent_main dm 
+                    JOIN state_master sm ON (dm.state_main = sm.state_main) 
+                    WHERE dm.status = 'Active' AND sm.status = 0";
+
+                items = await db.Database
+                    .SqlQueryRaw<HeadQuaterMasterViewModel>(sqlQuery)
+                    .ToListAsync();
+            }
 
             return items;
         }

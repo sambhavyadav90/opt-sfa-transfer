@@ -5,7 +5,6 @@ using OptSfa.Migration.Application.Interfaces;
 using OptSfa.Migration.Domain;
 using OptSfa.Migration.Domain.Models;
 using OptSfa.Migration.Domain.ViewModel;
-
 namespace OptSfa.Migration.Api.Controllers
 {
     [ApiController]
@@ -75,11 +74,11 @@ namespace OptSfa.Migration.Api.Controllers
         }
 
         [HttpPost("UpdateTarget")]
-        public async Task<ActionResult<MyJsonReturn<TargetPercentFormula>>> UpdateTarget([FromQuery] int rowid,[FromQuery] float rate)
+        public async Task<ActionResult<MyJsonReturn<TargetPercentFormula>>> UpdateTarget([FromQuery] int rowid, [FromQuery] float rate)
         {
             try
             {
-                var res = await targetPecentageFormulaService.updateTargetPercent(rowid,rate);
+                var res = await targetPecentageFormulaService.updateTargetPercent(rowid, rate);
                 return Ok(new MyJsonReturn<TargetPercentFormula>
                 {
                     data = res,

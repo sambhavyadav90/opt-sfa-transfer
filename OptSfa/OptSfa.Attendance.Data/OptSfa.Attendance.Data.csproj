@@ -16,8 +16,4 @@
     <ProjectReference Include="..\OptSfa.Attendance.Application\OptSfa.Attendance.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
 </Project>
