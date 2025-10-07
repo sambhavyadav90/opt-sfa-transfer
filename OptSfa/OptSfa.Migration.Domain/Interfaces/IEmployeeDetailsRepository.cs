@@ -6,8 +6,8 @@ using OptSfa.Migration.Domain.ViewModel;
 
 namespace OptSfa.Migration.Domain.Interfaces
 {
-    public interface IHeadQuarterViewRepository
+    public interface IEmployeeDetailsRepository
     {
-        public Task<List<HeadQuaterMasterViewModel>> getAllHeadQuarters(int id);
+        public Task<List<EmployeeDetailsViewModel> > GetAllEmployees(string distrectid, string state_main, string designations_oid, string emp_id);
     }
 }

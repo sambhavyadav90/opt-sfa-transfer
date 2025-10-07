@@ -7,11 +7,10 @@ namespace OptSfa.Migration.Domain.ViewModel
 {
     public class HeadQuaterMasterViewModel
     {
-    public int districtId { get; set; }
-    public string district { get; set; }
-    public int hqGroupId { get; set; }
-    public string status { get; set; }
-    public string districtCode { get; set; }
-    public int stateMain { get; set; }
+        public int? district_id { get; set; }
+        public string? district { get; set; }
+        public string? district_code { get; set; }
+        public int? state_main { get; set; }
+        public string? state { get; set; }
     }
 }
