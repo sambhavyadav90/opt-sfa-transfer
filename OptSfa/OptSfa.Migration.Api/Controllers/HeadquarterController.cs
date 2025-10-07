@@ -19,24 +19,24 @@ namespace OptSfa.Migration.Api.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async  Task<ActionResult<MyJsonReturn<List<HeadQuarterViewModel>>>> GetAllHeadquarters()
+        public async  Task<ActionResult<MyJsonReturn<List<HeadQuaterMasterViewModel>>>> GetAllHeadquarters([FromQuery] int id)
         {
             try
             {
-                var all = await _headquarterService.getAllHeadQuarters();
+                var datas = await _headquarterService.getAllHeadquaters(id);
 
-                return new MyJsonReturn<List<HeadQuarterViewModel>>
+                return new MyJsonReturn<List<HeadQuaterMasterViewModel>>
                 {
                     isSuccess = true,
                     status = System.Net.HttpStatusCode.OK,
                     message = "Headquarters fetched successfully",
                     stackTrace = null,
-                    data = all
+                    data = datas
                 };
             }
             catch (Exception ex)
             {
-                return new MyJsonReturn<List<HeadQuarterViewModel>>
+                return new MyJsonReturn<List<HeadQuaterMasterViewModel>>
                 {
                     isSuccess = false,
                     status = System.Net.HttpStatusCode.InternalServerError,
