@@ -1,4 +1,5 @@
-﻿using OptSfa.Migration.Application.Interfaces;
+﻿using System.Runtime.Serialization;
+using OptSfa.Migration.Application.Interfaces;
 using OptSfa.Migration.Domain.Interfaces;
 using OptSfa.Migration.Domain.Models;
 using OptSfa.Migration.Domain.ViewModel;
@@ -11,6 +12,11 @@ public class ClientService : IClientService
     public ClientService(IClientRepository clientRepository)
     {
         _clientRepository = clientRepository;
+    }
+
+    public Task<ClientMasterViewModalList> createClient(string id, ClientMasterViewModalList data)
+    {
+        return _clientRepository.createClient(id,data);
     }
 
     public async Task<List<ClientMasterViewModel>> getAll(string empId, string clientType, string areaMain, string status,int page,int page_size)

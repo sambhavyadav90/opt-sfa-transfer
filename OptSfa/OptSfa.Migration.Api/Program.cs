@@ -64,7 +64,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
-builder.Services.AddSingleton<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
 
 builder.Services.AddScoped<IStateMasterRepository, StateMasterRepository>();
@@ -76,12 +76,12 @@ builder.Services.AddScoped<IMappedDbColumnService, MappedDbCoulmnService>();
 builder.Services.AddScoped<ISaveDataMasterRepository, SaveDataMasterRepository>();
 
 builder.Services.AddScoped<ISaveMasterService, SaveMasterService>();
-builder.Services.AddSingleton<IFirebaseService, FirebaseService>();
+builder.Services.AddScoped<IFirebaseService, FirebaseService>();
 
 
 builder.Services.AddScoped<IEmployeeDetailsRepository, EmployeeDetailsRepository>();
 builder.Services.AddScoped<IEmployeeDetailsService, EmployeeDetailsService>();
-builder.Services.AddSingleton<IWebSocketManager, OptSfa.Migration.Application.Services.WebSocketManager>();
+builder.Services.AddScoped<IWebSocketManager, OptSfa.Migration.Application.Services.WebSocketManager>();
 builder.Services.AddApiVersioning();
 builder.Services.AddApiVersioning(config =>
 {
@@ -183,7 +183,6 @@ app.Map("/ws", async (HttpContext context, IWebSocketManager webSocketManager) =
         context.Response.StatusCode = 400;
     }
 });
-
 async Task HandleWebSocketAsync(WebSocket webSocket, IWebSocketManager webSocketManager)
 {
     webSocketManager.Add(webSocket);
@@ -199,8 +198,9 @@ async Task HandleWebSocketAsync(WebSocket webSocket, IWebSocketManager webSocket
                 var json = Encoding.UTF8.GetString(buffer, 0, result.Count);
                 if (JsonSerializer.Deserialize<MessageModel>(json) is MessageModel message)
                 {
-                    // Upload to Firebase in real-time
-                    var firebaseService = app.Services.GetRequiredService<IFirebaseService>();
+                    // ✅ Create a scope for scoped service
+                    using var scope = app.Services.CreateScope();
+                    var firebaseService = scope.ServiceProvider.GetRequiredService<IFirebaseService>();
                     await firebaseService.WriteMessageAsync("messages", message);
                 }
             }
@@ -213,7 +213,6 @@ async Task HandleWebSocketAsync(WebSocket webSocket, IWebSocketManager webSocket
     }
     catch (Exception ex)
     {
-        // Log error
         Console.WriteLine($"WebSocket error: {ex.Message}");
     }
     finally
@@ -224,8 +223,15 @@ async Task HandleWebSocketAsync(WebSocket webSocket, IWebSocketManager webSocket
 }
 
 // Start the Firebase listener once
-var startupFirebaseService = app.Services.GetRequiredService<IFirebaseService>();
-var startupWebSocketManager = app.Services.GetRequiredService<IWebSocketManager>();
-await startupFirebaseService.ListenToMessagesAsync("messages", msg => startupWebSocketManager.Broadcast(msg));
+// ✅ Run Firebase listener inside a scope
+using (var scope = app.Services.CreateScope())
+{
+    var startupFirebaseService = scope.ServiceProvider.GetRequiredService<IFirebaseService>();
+    var startupWebSocketManager = scope.ServiceProvider.GetRequiredService<IWebSocketManager>();
+
+    await startupFirebaseService.ListenToMessagesAsync("messages", msg =>
+        startupWebSocketManager.Broadcast(msg));
+}
+
 
 app.Run();
