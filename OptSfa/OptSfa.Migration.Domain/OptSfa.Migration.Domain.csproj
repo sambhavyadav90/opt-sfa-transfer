@@ -11,8 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OptSfa.Domain.Core\OptSfa.Domain.Core.csproj" />
     <PackageReference Include="FireSharp" Version="2.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+
   </ItemGroup>
 
 </Project>

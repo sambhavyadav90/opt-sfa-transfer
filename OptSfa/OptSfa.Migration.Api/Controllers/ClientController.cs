@@ -51,5 +51,29 @@ namespace OptSfa.Migration.Api.Controllers
                 });
             }
         }
+
+        [HttpPost]
+        [Route("api/ClientMasters/Insert/Bulk/{id}")]
+        public async Task<ActionResult<MyJsonReturn<ClientMasterViewModalList>>> createClient(string id, [FromBody] ClientMasterViewModalList clientData)
+        {
+            try
+            {
+                var clients = await _clientService.createClient(id, clientData);
+
+                return Ok(new MyJsonReturn<ClientMasterViewModalList>
+                {
+                    data = clients,
+                    status = HttpStatusCode.OK,
+                    isSuccess = true,
+                    message = " Clients Created Successfully",
+                    stackTrace = null
+                });
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

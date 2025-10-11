@@ -49,6 +49,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migration", "Migration", "{731A0ACC-A49F-43D3-B7B7-4C2A9B5430D0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gui", "Gui", "{DBA5DDC4-615F-4D5C-926A-3880248A82A4}"
+	ProjectSection(SolutionItems) = preProject
+		MigrationGui.txt = MigrationGui.txt
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{10608BE2-82B5-4163-8FBD-C37CFE5E1529}"
 EndProject
@@ -59,6 +62,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Report", "Report", "{3D62E8F9-A575-4D8F-BBA6-C9CF37ECB1A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gui", "Gui", "{08088CA1-7A8A-4FA2-9BD8-71CF00610AD9}"
+	ProjectSection(SolutionItems) = preProject
+		ReportGui.txt = ReportGui.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{6C0410CE-3035-475C-B960-F2D18E87231D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptSfa.Domain.Core", "OptSfa.Domain.Core\OptSfa.Domain.Core.csproj", "{40482D30-A18A-4866-9DC3-EFE260978648}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,6 +112,10 @@ Global
 		{1D949BC2-4E21-45DA-8343-822B8C95B13A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D949BC2-4E21-45DA-8343-822B8C95B13A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D949BC2-4E21-45DA-8343-822B8C95B13A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40482D30-A18A-4866-9DC3-EFE260978648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40482D30-A18A-4866-9DC3-EFE260978648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40482D30-A18A-4866-9DC3-EFE260978648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40482D30-A18A-4866-9DC3-EFE260978648}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +146,7 @@ Global
 		{1D949BC2-4E21-45DA-8343-822B8C95B13A} = {CA87BF24-0F18-49CE-89D4-14F17F21FABB}
 		{3D62E8F9-A575-4D8F-BBA6-C9CF37ECB1A3} = {BF18855E-54B9-485D-9ED8-0FA2C0C9932A}
 		{08088CA1-7A8A-4FA2-9BD8-71CF00610AD9} = {3D62E8F9-A575-4D8F-BBA6-C9CF37ECB1A3}
+		{40482D30-A18A-4866-9DC3-EFE260978648} = {6C0410CE-3035-475C-B960-F2D18E87231D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {362E80D4-E0B0-41CD-AF67-860D81F8CC61}
